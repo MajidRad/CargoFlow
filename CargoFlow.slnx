@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Src/" />
+  <Folder Name="/Src/BuildingBlocks/">
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Application/CargoFlow.BuildingBlocks.Application.csproj" />
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/CargoFlow.BuildingBlocks.Domain.csproj" />
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Infrastructure/CargoFlow.BuildingBlocks.Infrastructure.csproj" />
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Messaging/CargoFlow.BuildingBlocks.Messaging.csproj" />
+  </Folder>
+  <Folder Name="/Src/Gateway/" />
+  <Folder Name="/Src/Services/" />
+  <Folder Name="/Src/Services/Identity/">
+    <Project Path="Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj" Id="a19ba563-b538-4bf2-b061-a93f600b17a3" />
+  </Folder>
+  <Folder Name="/Src/Services/Inventory/" />
+  <Folder Name="/Src/Services/Notifications/" />
+  <Folder Name="/Src/Services/Orders/" />
+  <Folder Name="/Src/Services/Shipping/" />
+  <Folder Name="/Src/Tests/" />
+</Solution>

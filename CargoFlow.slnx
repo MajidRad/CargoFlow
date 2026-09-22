@@ -12,6 +12,9 @@
   <Folder Name="/Src/Gateway/" />
   <Folder Name="/Src/Services/" />
   <Folder Name="/Src/Services/Identity/">
+    <Project Path="Identity/CargoFlow.Identity.Application/CargoFlow.Identity.Application.csproj" Id="6812c54b-f62a-4a36-bbe4-237d8374aecd" />
+    <Project Path="Identity/CargoFlow.Identity.Domain/CargoFlow.Identity.Domain.csproj" Id="7eac91d9-6118-46d8-ad90-18b053c58be9" />
+    <Project Path="Identity/CargoFlow.Identity.Infrastructure/CargoFlow.Identity.Infrastructure.csproj" Id="ed2f75ac-f7fb-4ca0-919e-9d390c23967e" />
     <Project Path="Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj" Id="a19ba563-b538-4bf2-b061-a93f600b17a3" />
   </Folder>
   <Folder Name="/Src/Services/Inventory/" />
@@ -19,4 +22,7 @@
   <Folder Name="/Src/Services/Orders/" />
   <Folder Name="/Src/Services/Shipping/" />
   <Folder Name="/Src/Tests/" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>

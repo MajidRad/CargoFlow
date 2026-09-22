@@ -1,0 +1,6 @@
+services:
+  cargoflow.identity.api:
+    image: ${DOCKER_REGISTRY-}cargoflowidentityapi
+    build:
+      context: .
+      dockerfile: Src/Identity/CargoFlow.Identity.Api/Dockerfile

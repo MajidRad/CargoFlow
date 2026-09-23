@@ -12,7 +12,7 @@ public record FullName(string FirstName,string LastName) : IValueObject
             throw new IdentityDomainException("Invalid full name");
         return new FullName(first,last); 
     }
-    public override string ToString()=>$"{firstName} {lastName}";
+    public override string ToString()=>$"{FirstName} {LastName}";
 
 
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CargoFlow.Identity.Infrastructure.Keycloak;
+﻿namespace CargoFlow.Identity.Infrastructure.Keycloak;
 
 public sealed class KeycloakOptions
 {

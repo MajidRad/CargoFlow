@@ -6,4 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Auth\Commands\" />
+    <Folder Include="Auth\Queries\" />
+    <Folder Include="Roles\Commands\" />
+    <Folder Include="Roles\Queries\" />
+    <Folder Include="Users\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\BuildingBlocks\CargoFlow.BuildingBlocks.Application\CargoFlow.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\CargoFlow.Identity.Domain\CargoFlow.Identity.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using CargoFlow.Identity.Domain.Entities;
+﻿using CargoFlow.Identity.Application.Abstractions;
+using CargoFlow.Identity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace CargoFlow.Identity.Infrastructure.Persistence;
 
-public class IdentityDbContext : DbContext
+public class IdentityDbContext : DbContext,IUnitOfWork
 {
     public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
     {

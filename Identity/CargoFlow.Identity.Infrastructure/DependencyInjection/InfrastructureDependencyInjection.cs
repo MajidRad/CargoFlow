@@ -1,9 +1,12 @@
-﻿using CargoFlow.Identity.Application.Interfaces;
+﻿using CargoFlow.Identity.Application.Abstractions;
+using CargoFlow.Identity.Application.Interfaces;
+using CargoFlow.Identity.Domain.Entities;
 using CargoFlow.Identity.Infrastructure.Keycloak;
 using CargoFlow.Identity.Infrastructure.Keycloak.Clients;
 using CargoFlow.Identity.Infrastructure.Keycloak.Services;
 using CargoFlow.Identity.Infrastructure.Keycloak.TokenProvider;
 using CargoFlow.Identity.Infrastructure.Persistence;
+using CargoFlow.Identity.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,8 @@ public static class InfrastructureDependencyInjection
             options.UseNpgsql(
                 configuration.GetConnectionString("IdentityDatabase"));
         });
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IdentityDbContext>());
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
     private static IServiceCollection AddKeycloak(this IServiceCollection services, IConfiguration configuration)

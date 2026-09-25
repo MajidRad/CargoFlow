@@ -13,12 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj", "Src/Identity/CargoFlow.Identity.Api/"]
-COPY ["Identity/CargoFlow.Identity.Application/CargoFlow.Identity.Application.csproj", "Identity/CargoFlow.Identity.Application/"]
-COPY ["Src/BuildingBlocks/CargoFlow.BuildingBlocks.Application/CargoFlow.BuildingBlocks.Application.csproj", "Src/BuildingBlocks/CargoFlow.BuildingBlocks.Application/"]
-COPY ["Identity/CargoFlow.Identity.Domain/CargoFlow.Identity.Domain.csproj", "Identity/CargoFlow.Identity.Domain/"]
-COPY ["Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/CargoFlow.BuildingBlocks.Domain.csproj", "Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/"]
-COPY ["Identity/CargoFlow.Identity.Infrastructure/CargoFlow.Identity.Infrastructure.csproj", "Identity/CargoFlow.Identity.Infrastructure/"]
-COPY ["Src/BuildingBlocks/CargoFlow.BuildingBlocks.Presentation/CargoFlow.BuildingBlocks.Presentation.csproj", "Src/BuildingBlocks/CargoFlow.BuildingBlocks.Presentation/"]
 RUN dotnet restore "./Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj"
 COPY . .
 WORKDIR "/src/Src/Identity/CargoFlow.Identity.Api"

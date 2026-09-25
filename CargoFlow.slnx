@@ -8,6 +8,7 @@
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/CargoFlow.BuildingBlocks.Domain.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Infrastructure/CargoFlow.BuildingBlocks.Infrastructure.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Messaging/CargoFlow.BuildingBlocks.Messaging.csproj" />
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Presentation/CargoFlow.BuildingBlocks.Presentation.csproj" Id="cca74a9b-e41f-4370-99a9-0256764b16fa" />
   </Folder>
   <Folder Name="/Src/Gateway/" />
   <Folder Name="/Src/Services/" />

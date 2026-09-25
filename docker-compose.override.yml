@@ -1,14 +1,59 @@
 services:
+
+  identitydb:
+    container_name: identitydb
+    image: postgres:16.4
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cargoflow_identity
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_identity:/var/lib/postgresql/data
+    networks:
+      - cargoflow
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev
+    restart: unless-stopped
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://identitydb:5432/cargoflow_identity
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - identitydb
+    networks:
+      - cargoflow
+
   cargoflow.identity.api:
+    container_name: identity-api
+    depends_on:
+      - identitydb
+      - keycloak
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+
+      - ConnectionStrings__IdentityDatabase=Host=identitydb;Port=5432;Database=cargoflow_identity;Username=postgres;Password=postgres
+
+      - Keycloak__BaseUrl=http://keycloak:8080
+      - Keycloak__Realm=cargoflow
+      - Keycloak__ClientId=identity-service
+      - Keycloak__ClientSecret=secret
+      - Keycloak__AdminUsername=admin
+      - Keycloak__AdminPassword=admin
+
     ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5001:8080"
+
+    networks:
+      - cargoflow

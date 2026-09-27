@@ -5,6 +5,7 @@
   <Folder Name="/Src/" />
   <Folder Name="/Src/BuildingBlocks/">
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Application/CargoFlow.BuildingBlocks.Application.csproj" />
+    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Authorization/CargoFlow.BuildingBlocks.Authorization.csproj" Id="8afd823b-3276-4f5f-826b-92341730ddd0" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/CargoFlow.BuildingBlocks.Domain.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Infrastructure/CargoFlow.BuildingBlocks.Infrastructure.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Messaging/CargoFlow.BuildingBlocks.Messaging.csproj" />

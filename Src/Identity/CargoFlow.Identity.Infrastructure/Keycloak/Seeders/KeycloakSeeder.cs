@@ -17,11 +17,18 @@ public sealed class KeycloakSeeder : IKeycloakSeeder
     public async Task SeedAsync()
     {
         const string realm = "cargoflow";
-
         if (!await _adminClient.RealmExistsAsync(realm))
         {
             await _adminClient.CreateRealmAsync(realm);
         }
+        if (!await _adminClient.ClientExistsAsync(realm, "cargoflow-api"))
+        {
+            await _adminClient.CreateClientAsync(
+            realm,
+            "cargoflow-api",
+            _options.ClientSecret);
+        }
+
 
         if (!await _adminClient.RoleExistsAsync(realm, "Admin"))
         {
@@ -43,12 +50,6 @@ public sealed class KeycloakSeeder : IKeycloakSeeder
             await _adminClient.CreateRoleAsync(realm, "Dispatcher");
         }
 
-        if (!await _adminClient.ClientExistsAsync(realm, "cargoflow-api"))
-        {
-            await _adminClient.CreateClientAsync(
-            realm,
-            "cargoflow-api",
-            _options.ClientSecret);
-        }
+
     }
 }

@@ -35,6 +35,7 @@ public sealed class KeycloakAdminClient : IkeycloakAdminClient
             LastName = request.LastName,
             Enabled = request.Enabled,
             EmailVerified = request.EmailVerified,
+    
             Credentials =
          [
              new KeycloakCredential
@@ -138,14 +139,14 @@ public sealed class KeycloakAdminClient : IkeycloakAdminClient
         var accessToken =
           await _keycloakTokenProvider.GetAdminAccessTokenAsync();
 
-            _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        _httpClient.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response =
-            await _httpClient.GetAsync(
-            $"/admin/realms/{realmName}/roles/{roleName}");
+        var response =
+        await _httpClient.GetAsync(
+        $"/admin/realms/{realmName}/roles/{roleName}");
 
-            return response.IsSuccessStatusCode;
+        return response.IsSuccessStatusCode;
     }
 
     public async Task CreateRoleAsync(string realmName, string roleName)
@@ -201,6 +202,7 @@ public sealed class KeycloakAdminClient : IkeycloakAdminClient
             clientId,
             enabled = true,
             publicClient = false,
+            directAccessGrantsEnabled=true,
             serviceAccountsEnabled = true,
             secret
         };

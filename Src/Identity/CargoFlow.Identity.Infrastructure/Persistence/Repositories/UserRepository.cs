@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CargoFlow.Identity.Infrastructure.Persistence.Repositories;
 
-internal sealed class UserRepository:IUserRepository
+internal sealed class UserRepository : IUserRepository
 {
     private readonly IdentityDbContext _dbContext;
 
@@ -63,5 +63,10 @@ internal sealed class UserRepository:IUserRepository
     public void Delete(User user)
     {
         _dbContext.Users.Remove(user);
+    }
+
+    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Users.ToListAsync(cancellationToken);
     }
 }

@@ -47,8 +47,8 @@ services:
 
       - Keycloak__BaseUrl=http://keycloak:8080
       - Keycloak__Realm=cargoflow
-      - Keycloak__ClientId=identity-service
-      - Keycloak__ClientSecret=secret
+      - Keycloak__ClientId=cargoflow-api
+      - Keycloak__ClientSecret=thisIsTheSecret
       - Keycloak__AdminUsername=admin
       - Keycloak__AdminPassword=admin
 

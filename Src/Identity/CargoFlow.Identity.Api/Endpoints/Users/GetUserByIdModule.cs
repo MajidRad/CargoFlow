@@ -1,4 +1,6 @@
-﻿using Carter;
+﻿using CargoFlow.BuildingBlocks.Presentation.Extensions;
+using CargoFlow.Identity.Application.Users.Queries;
+using Carter;
 using MediatR;
 
 namespace CargoFlow.Identity.Api.Endpoints.Users;

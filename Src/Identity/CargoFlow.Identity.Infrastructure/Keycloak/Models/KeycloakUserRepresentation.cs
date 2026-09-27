@@ -12,6 +12,7 @@ public sealed class KeycloakUserRepresentation
     public string LastName { get; init; } = string.Empty;
     public bool Enabled { get; init; }
     public bool EmailVerified { get; init; }
+
     public ICollection<KeycloakCredential> Credentials { get; init; } = [];
 
 }

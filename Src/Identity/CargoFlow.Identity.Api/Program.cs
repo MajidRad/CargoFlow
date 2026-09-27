@@ -1,3 +1,4 @@
+using CargoFlow.BuildingBlocks.Authorization.DependencyInjection;
 using CargoFlow.Identity.Application.DependencyInjection;
 using CargoFlow.Identity.Infrastructure.DependencyInjection;
 using CargoFlow.Identity.Infrastructure.Keycloak.Clients;
@@ -26,8 +27,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = jwt["Audience"];
         options.RequireHttpsMetadata =
         bool.Parse(jwt["RequireHttpsMetadata"]!);
-
+        options.TokenValidationParameters = new()
+        {
+            NameClaimType = "preferred_username",
+            RoleClaimType = "roles"
+        };
     });
+builder.Services.AddPermissionAuthorization();
 builder.Services.AddAuthorization();
 builder.Services.AddCarter();
 var app = builder.Build();

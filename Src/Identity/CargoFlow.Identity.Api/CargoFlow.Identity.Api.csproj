@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Application\CargoFlow.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Authorization\CargoFlow.BuildingBlocks.Authorization.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Domain\CargoFlow.BuildingBlocks.Domain.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Infrastructure\CargoFlow.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Messaging\CargoFlow.BuildingBlocks.Messaging.csproj" />

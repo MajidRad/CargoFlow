@@ -3,12 +3,14 @@ using CargoFlow.Identity.Application.Abstractions;
 using CargoFlow.Identity.Application.Interfaces;
 using CargoFlow.Identity.Domain.Entities;
 using CargoFlow.Identity.Infrastructure.Keycloak;
+using CargoFlow.Identity.Infrastructure.Keycloak.ClaimsTransformation;
 using CargoFlow.Identity.Infrastructure.Keycloak.Clients;
 using CargoFlow.Identity.Infrastructure.Keycloak.Seeders;
 using CargoFlow.Identity.Infrastructure.Keycloak.Services;
 using CargoFlow.Identity.Infrastructure.Keycloak.TokenProvider;
 using CargoFlow.Identity.Infrastructure.Persistence;
 using CargoFlow.Identity.Infrastructure.Persistence.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +23,7 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDatabase(configuration)
-                 .AddKeycloak(configuration);
+                .AddKeycloak(configuration);
         return services;    
 
     }
@@ -75,7 +77,10 @@ public static class InfrastructureDependencyInjection
 
         services.AddScoped<IKeycloakUserService, KeycloakUserService>();
         services.AddScoped<IKeycloakRoleService, KeycloakRoleService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IKeycloakSeeder, KeycloakSeeder>();
+        services.AddTransient<IClaimsTransformation, KeycloakPermissionClaimsTransformation>();
         return services;
     }
+  
 }

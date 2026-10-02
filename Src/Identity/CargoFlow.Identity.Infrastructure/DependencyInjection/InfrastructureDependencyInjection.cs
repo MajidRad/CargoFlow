@@ -1,86 +1,57 @@
-﻿
-using CargoFlow.Identity.Application.Abstractions;
-using CargoFlow.Identity.Application.Interfaces;
-using CargoFlow.Identity.Domain.Entities;
-using CargoFlow.Identity.Infrastructure.Keycloak;
-using CargoFlow.Identity.Infrastructure.Keycloak.ClaimsTransformation;
-using CargoFlow.Identity.Infrastructure.Keycloak.Clients;
-using CargoFlow.Identity.Infrastructure.Keycloak.Seeders;
-using CargoFlow.Identity.Infrastructure.Keycloak.Services;
-using CargoFlow.Identity.Infrastructure.Keycloak.TokenProvider;
+﻿using CargoFlow.Identity.Application.Abstractions.Authentication;
+using CargoFlow.Identity.Application.Abstractions.Persistence;
+using CargoFlow.Identity.Application.Abstractions.Security;
+using CargoFlow.Identity.Domain.Repositories;
+using CargoFlow.Identity.Infrastructure.Authentication;
+using CargoFlow.Identity.Infrastructure.Authorization;
 using CargoFlow.Identity.Infrastructure.Persistence;
 using CargoFlow.Identity.Infrastructure.Persistence.Repositories;
-using Microsoft.AspNetCore.Authentication;
+using CargoFlow.Identity.Infrastructure.Persistence.Seeding;
+using CargoFlow.Identity.Infrastructure.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace CargoFlow.Identity.Infrastructure.DependencyInjection;
 
 public static class InfrastructureDependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+    this IServiceCollection services,
+    IConfiguration configuration)
     {
-        services.AddDatabase(configuration)
-                .AddKeycloak(configuration);
-        return services;    
-
-    }
-
-    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddDbContext<IdentityDbContext>(options =>
-        {
-            options.UseNpgsql(
-                configuration.GetConnectionString("IdentityDatabase"));
+        services.AddDbContext<IdentityDbContext>(options =>{
+            options
+            .UseNpgsql(configuration.GetConnectionString("IdentityDatabase"));
         });
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IdentityDbContext>());
+        
+        services.Configure<JwtOptions>(
+            configuration.GetSection("Jwt"));
+
+        services.Configure<AdminUserOptions>(
+            configuration.GetSection("AdminUser"));
+
+        services.AddScoped<IUnitOfWork>(sp=>sp.GetRequiredService<IdentityDbContext>());
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+
+
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        services.AddScoped<IJwtProvider, JwtProvider>();
+
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
+        services.AddSingleton<IRefreshTokenGenerator,
+            RefreshTokenGenerator>();
+
+        services.AddSingleton<
+            IAuthorizationHandler,
+            PermissionAuthorizationHandler>();
+
+        services.AddHttpContextAccessor();
+
         return services;
     }
-    private static IServiceCollection AddKeycloak(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<KeycloakOptions>(
-        configuration.GetSection(KeycloakOptions.SectionName));
-
-        services.AddHttpClient<KeycloakTokenProvider>((sp, client) =>
-        {
-            var options = sp.GetRequiredService<IOptions<KeycloakOptions>>().Value;
-            client.BaseAddress = new Uri(options.BaseUrl);
-        });
-
-        services.AddSingleton<IKeycloakTokenProvider>(
-            sp => sp.GetRequiredService<KeycloakTokenProvider>());
-
-        services.AddHttpClient<IkeycloakAdminClient, KeycloakAdminClient>((sp, client) =>
-        {
-            var options = sp.GetRequiredService<IOptions<KeycloakOptions>>().Value;
-            client.BaseAddress = new Uri(options.BaseUrl);
-        });
-
-        services.AddHttpClient<IKeycloakAuthClient, KeycloakAuthClient>((sp, client) =>
-        {
-            var options = sp.GetRequiredService<IOptions<KeycloakOptions>>().Value;
-            client.BaseAddress = new Uri(options.BaseUrl);
-        });
-
-        services.AddHttpClient<IKeycloakHealthChecker, KeycloakHealthChecker>(
-        (sp, client) =>
-        {
-            var options = sp
-                .GetRequiredService<IOptions<KeycloakOptions>>()
-                .Value;
-
-            client.BaseAddress = new Uri(options.BaseUrl);
-        });
-
-        services.AddScoped<IKeycloakUserService, KeycloakUserService>();
-        services.AddScoped<IKeycloakRoleService, KeycloakRoleService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IKeycloakSeeder, KeycloakSeeder>();
-        services.AddTransient<IClaimsTransformation, KeycloakPermissionClaimsTransformation>();
-        return services;
-    }
-  
 }

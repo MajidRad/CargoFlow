@@ -1,5 +1,5 @@
-﻿using CargoFlow.Identity.Domain.Entities;
-using CargoFlow.Identity.Domain.ValueObjects;
+﻿using CargoFlow.Identity.Domain.Aggregate;
+using CargoFlow.Identity.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,66 +7,50 @@ using System.Text;
 
 namespace CargoFlow.Identity.Infrastructure.Persistence.Repositories;
 
-internal sealed class UserRepository : IUserRepository
+public sealed class UserRepository : IUserRepository
 {
-    private readonly IdentityDbContext _dbContext;
+    private readonly IdentityDbContext _context;
 
-    public UserRepository(IdentityDbContext dbContext)
+    public UserRepository(IdentityDbContext context)
     {
-        _dbContext = dbContext;
+        _context = context;
+    }
+    public async Task AddAsync(User user, CancellationToken cancellationToken)
+    {
+        await _context.Users.AddAsync(user);
     }
 
-    public async Task<User?> GetByIdAsync(
-    UserId id,
-    CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users
-        .FirstOrDefaultAsync(
-        x => x.Id == id,
-        cancellationToken);
+        return await _context.Users
+                     .FirstOrDefaultAsync(
+                     x => x.Email.Value == email,
+                     cancellationToken);
     }
 
-    public async Task<User?> GetByEmailAsync(
-    Email email,
-    CancellationToken cancellationToken = default)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users
-        .FirstOrDefaultAsync(
-        x => x.Email == email,
-        cancellationToken);
+        return await _context.Users
+              .FirstOrDefaultAsync(
+              x => x.Id == id,
+              cancellationToken);
     }
 
-    public async Task<bool> ExistsByEmailAsync(
-    Email email,
-    CancellationToken cancellationToken = default)
+    public async Task<User?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users
-        .AnyAsync(
-        x => x.Email == email,
-        cancellationToken);
+        return await _context.Users
+            .Include(x=>x.Roles)
+            .ThenInclude(x=>x.Permissions)
+            .Include(x=>x.RefreshTokens)
+            .FirstOrDefaultAsync(x=>x.RefreshTokens
+            .Any(r=>r.Token==refreshToken),cancellationToken
+            );
     }
 
-    public async Task AddAsync(
-    User user,
-    CancellationToken cancellationToken = default)
+    public Task UpdateAsync(User user, CancellationToken cancellationToken)
     {
-        await _dbContext.Users.AddAsync(
-        user,
-        cancellationToken);
-    }
+        _context.Users.Update(user);
 
-    public void Update(User user)
-    {
-        _dbContext.Users.Update(user);
-    }
-
-    public void Delete(User user)
-    {
-        _dbContext.Users.Remove(user);
-    }
-
-    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Users.ToListAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 }

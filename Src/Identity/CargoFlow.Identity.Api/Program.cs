@@ -1,60 +1,39 @@
-using CargoFlow.BuildingBlocks.Authorization.DependencyInjection;
+using CargoFlow.BuildingBlocks.Application.DependencyInjection;
 using CargoFlow.Identity.Application.DependencyInjection;
+using CargoFlow.Identity.Infrastructure.Authentication;
 using CargoFlow.Identity.Infrastructure.DependencyInjection;
-using CargoFlow.Identity.Infrastructure.Keycloak.Clients;
-using CargoFlow.Identity.Infrastructure.Keycloak.Seeders;
-using CargoFlow.Identity.Infrastructure.Persistence;
+using CargoFlow.Identity.Infrastructure.Authorization;
 using Carter;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+using CargoFlow.Identity.Infrastructure.Persistence.Extensions;
 using Scalar.AspNetCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddBuildingBlocksApplication();
+builder.Services.AddApplication();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddApplication();
+var jwtOptions = builder.Configuration
+    .GetSection("Jwt")
+    .Get<JwtOptions>()!;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var jwt = builder.Configuration.GetSection("Jwt");
-        options.Authority = jwt["Authority"];
-        options.Audience = jwt["Audience"];
-        options.RequireHttpsMetadata =
-        bool.Parse(jwt["RequireHttpsMetadata"]!);
-        options.TokenValidationParameters = new()
-        {
-            NameClaimType = "preferred_username",
-            RoleClaimType = "roles"
-        };
-    });
+builder.Services.AddJwtAuthentication(jwtOptions);
 builder.Services.AddPermissionAuthorization();
-builder.Services.AddAuthorization();
+
 builder.Services.AddCarter();
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
-    await dbContext.Database.MigrateAsync();
-    var keycloakHealthChecker = scope.ServiceProvider.GetRequiredService<IKeycloakHealthChecker>();
-    await keycloakHealthChecker.WaitUntilReadyAsync();
-    var keycloakSeeder = scope.ServiceProvider.GetRequiredService<IKeycloakSeeder>();
-    await keycloakSeeder.SeedAsync();
-}
+await app.InitialDatabaseAsync();
 // Configure the HTTP request pipeline.
-app.MapOpenApi();
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
-        options.Title = "CargoFlow API";
-        options.Theme = ScalarTheme.DeepSpace;
+        options.Title = "Cargoflow.Identity";
+        options.Theme = ScalarTheme.Purple;
     });
 }
 

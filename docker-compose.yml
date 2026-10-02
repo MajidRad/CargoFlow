@@ -7,8 +7,7 @@ services:
       dockerfile: Src/Identity/CargoFlow.Identity.Api/Dockerfile
   identitydb:
     image: postgres:16.4
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.0
+
 
 volumes:
   postgres_identity:

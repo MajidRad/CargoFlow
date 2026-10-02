@@ -22,72 +22,153 @@ namespace CargoFlow.Identity.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.AuditLog", b =>
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Aggregate.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("action");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("timestamp");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("audit_log", (string)null);
-                });
-
-            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
-                    b.Property<string>("KeyCloakId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("keycloak_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.User", b =>
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.Permission", b =>
                 {
-                    b.OwnsOne("CargoFlow.Identity.Domain.ValueObjects.FullName", "FullName", b1 =>
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("permissions", (string)null);
+                });
+
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Revoked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("roles", (string)null);
+                });
+
+            modelBuilder.Entity("role_permissions", b =>
+                {
+                    b.Property<Guid>("role_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("permission_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("role_id", "permission_id");
+
+                    b.HasIndex("permission_id");
+
+                    b.ToTable("role_permissions", (string)null);
+                });
+
+            modelBuilder.Entity("user_roles", b =>
+                {
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("role_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("user_id", "role_id");
+
+                    b.HasIndex("role_id");
+
+                    b.ToTable("user_roles", (string)null);
+                });
+
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Aggregate.User", b =>
+                {
+                    b.OwnsOne("CargoFlow.Identity.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(255)
+                                .HasColumnType("character varying(255)")
+                                .HasColumnName("email");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
+                            b1.ToTable("users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("CargoFlow.Identity.Domain.ValueObjects.FullName", "Name", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("FirstName")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
                                 .HasColumnName("first_name");
 
                             b1.Property<string>("LastName")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
                                 .HasColumnName("last_name");
 
                             b1.HasKey("UserId");
@@ -98,25 +179,15 @@ namespace CargoFlow.Identity.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("CargoFlow.Identity.Domain.ValueObjects.UserMetadata", "UserMetadata", b1 =>
+                    b.OwnsOne("CargoFlow.Identity.Domain.ValueObjects.PasswordHash", "PasswordHash", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Language")
-                                .HasMaxLength(10)
-                                .HasColumnType("character varying(10)")
-                                .HasColumnName("language");
-
-                            b1.Property<string>("Theme")
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
-                                .HasColumnName("theme");
-
-                            b1.Property<string>("TimeZone")
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("time_zone");
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("password_hash");
 
                             b1.HasKey("UserId");
 
@@ -126,11 +197,58 @@ namespace CargoFlow.Identity.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("FullName")
+                    b.Navigation("Email")
                         .IsRequired();
 
-                    b.Navigation("UserMetadata")
+                    b.Navigation("Name")
                         .IsRequired();
+
+                    b.Navigation("PasswordHash")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("CargoFlow.Identity.Domain.Aggregate.User", null)
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("role_permissions", b =>
+                {
+                    b.HasOne("CargoFlow.Identity.Domain.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("permission_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CargoFlow.Identity.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("user_roles", b =>
+                {
+                    b.HasOne("CargoFlow.Identity.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CargoFlow.Identity.Domain.Aggregate.User", null)
+                        .WithMany()
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CargoFlow.Identity.Domain.Aggregate.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

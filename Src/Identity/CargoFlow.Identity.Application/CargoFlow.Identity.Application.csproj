@@ -7,18 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="14.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Auth\Queries\" />
-    <Folder Include="Roles\Queries\" />
+    <Folder Include="Abstractions\Messaging\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Features\Roles\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CargoFlow.BuildingBlocks.Application\CargoFlow.BuildingBlocks.Application.csproj" />
     <ProjectReference Include="..\CargoFlow.Identity.Domain\CargoFlow.Identity.Domain.csproj" />
-
   </ItemGroup>
 
 </Project>

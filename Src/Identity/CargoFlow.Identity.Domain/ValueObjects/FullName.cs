@@ -1,18 +1,17 @@
 ﻿using CargoFlow.BuildingBlocks.Domain;
-using CargoFlow.Identity.Domain.Exceptions;
 
 namespace CargoFlow.Identity.Domain.ValueObjects;
 
-public record FullName(string FirstName,string LastName) : IValueObject
+public sealed record FullName(
+    string FirstName,
+    string LastName):IValueObject
 {
-
-    public static FullName Create(string first,string last)
+    public static FullName Create(
+        string firstName,
+        string lastName)
     {
-        if (string.IsNullOrWhiteSpace(first) || string.IsNullOrWhiteSpace(last))
-            throw new IdentityDomainException("Invalid full name");
-        return new FullName(first,last); 
+        return new FullName(
+            firstName.Trim(),
+            lastName.Trim());
     }
-    public override string ToString()=>$"{FirstName} {LastName}";
-
-
 }

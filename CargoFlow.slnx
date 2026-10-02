@@ -5,7 +5,6 @@
   <Folder Name="/Src/" />
   <Folder Name="/Src/BuildingBlocks/">
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Application/CargoFlow.BuildingBlocks.Application.csproj" />
-    <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Authorization/CargoFlow.BuildingBlocks.Authorization.csproj" Id="8afd823b-3276-4f5f-826b-92341730ddd0" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Domain/CargoFlow.BuildingBlocks.Domain.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Infrastructure/CargoFlow.BuildingBlocks.Infrastructure.csproj" />
     <Project Path="Src/BuildingBlocks/CargoFlow.BuildingBlocks.Messaging/CargoFlow.BuildingBlocks.Messaging.csproj" />
@@ -14,10 +13,14 @@
   <Folder Name="/Src/Gateway/" />
   <Folder Name="/Src/Services/" />
   <Folder Name="/Src/Services/Identity/">
-    <Project Path="Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj" Id="a19ba563-b538-4bf2-b061-a93f600b17a3" />
-    <Project Path="Src/Identity/CargoFlow.Identity.Application/CargoFlow.Identity.Application.csproj" />
-    <Project Path="Src/Identity/CargoFlow.Identity.Domain/CargoFlow.Identity.Domain.csproj" />
-    <Project Path="Src/Identity/CargoFlow.Identity.Infrastructure/CargoFlow.Identity.Infrastructure.csproj" />
+    <Project Path="Src/Identity/CargoFlow.Identity.Api/CargoFlow.Identity.Api.csproj" Id="85c3deee-cb6e-4ed4-ba90-bddcb25b742f" />
+    <Project Path="Src/Identity/CargoFlow.Identity.Application/CargoFlow.Identity.Application.csproj" Id="1199e23a-34e8-4fb4-83a6-c573d44a7e9b" />
+    <Project Path="Src/Identity/CargoFlow.Identity.Domain/CargoFlow.Identity.Domain.csproj" Id="f6d85d61-c733-4447-b88d-2d6d0821aae8" />
+    <Project Path="Src/Identity/CargoFlow.Identity.Infrastructure/CargoFlow.Identity.Infrastructure.csproj" Id="09e97972-f570-4059-8da8-36cc0b1c7543" />
+  </Folder>
+  <Folder Name="/Src/Services/Identity/Tests/">
+    <Project Path="Src/Identity/Tests/CargoFlow.Identity.Domain.UnitTests/CargoFlow.Identity.Domain.UnitTests.csproj" Id="4c7af68f-01b2-4d12-a0a9-6f1b194189d9" />
+    <Project Path="Src/Identity/Tests/CargoFlow.Identity.IntegrationTests/CargoFlow.Identity.IntegrationTests.csproj" Id="65a1a694-f70f-47e5-9085-2daa3111322b" />
   </Folder>
   <Folder Name="/Src/Services/Inventory/" />
   <Folder Name="/Src/Services/Notifications/" />
